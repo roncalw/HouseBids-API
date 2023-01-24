@@ -23,4 +23,10 @@ jobs:
     
     - name: Publish
       run: dotnet publish --framework net6.0 --output pub --configuration Release --self-contained -r win10-x64
+      
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3.1.2
+      with:
+       name: artifacts
+       path: pub
 
