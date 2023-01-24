@@ -16,7 +16,6 @@ jobs:
     runs-on: windows-latest
   
     steps:
-    - name: Download Code
     - uses: actions/checkout@v3.3.0
     
     - name: Restore Nuget Packages
