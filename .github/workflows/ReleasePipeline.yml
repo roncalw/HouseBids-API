@@ -1,0 +1,23 @@
+name: Release Pipeline
+
+on:
+  workflow_dispatch:
+jobs:
+  deploy_local:
+    runs-on: self-hosted
+
+    steps: 
+    - name: Prepare local folders
+      run: |       
+        Remove-Item 'c:\pub\hbapi_bak1' -Recurse -ErrorAction Ignore
+        Remove-Item 'c:\pub\hbapi_bak' -Recurse -ErrorAction Ignore
+        ren c:\pub\hbapi hbapi_bak
+        md c:\pub\hbapi
+        
+    - name: Download artifact
+      id: download-artifact
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        workflow: BuildPipeline.yml
+        name: artifacts
+        path: c:\pub\hbapi
