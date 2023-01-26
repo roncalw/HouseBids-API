@@ -16,7 +16,8 @@ jobs:
     runs-on: windows-latest
   
     steps:
-    - uses: actions/checkout@v3.3.0
+    - name: Download the Code from Repository
+      uses: actions/checkout@v3.3.0
     
     - name: Restore Nuget Packages
       run: dotnet restore
