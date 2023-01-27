@@ -33,7 +33,7 @@ jobs:
     needs: deploy_local
     runs-on: win2019dc03
     environment:
-      name:IIS_Environment.Prod
+      name: IIS_Environment.Prod
 
     steps:
     - name: Stop Website
