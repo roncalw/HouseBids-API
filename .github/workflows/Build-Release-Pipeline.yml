@@ -32,7 +32,7 @@ jobs:
     - name: Stop Website
       run: |
         # Stop the IIS website
-        C:\Windows\System32\inetsrv\appcmd stop site /site.name:"HouseBids Website"
+        C:\Windows\System32\inetsrv\appcmd stop site /site.name:"API Service"
 
     - name: Prepare local folders
       run: |       
@@ -50,6 +50,35 @@ jobs:
     - name: Start Website
       run: |
         # Start the IIS website
-        C:\Windows\System32\inetsrv\appcmd start site /site.name:"HouseBids Website"
+        C:\Windows\System32\inetsrv\appcmd start site /site.name:"API Service"
+        
+  deploy_remote:
+    needs: deploy_local
+    runs-on: win2019dc03
+    environment:
+      name: IIS_Environment.Prod
 
-     
+    steps: 
+    - name: Stop Website
+      run: |
+        # Stop the IIS website
+        C:\Windows\System32\inetsrv\appcmd stop site /site.name:"API Service"
+
+    - name: Prepare local folders
+      run: |       
+        Remove-Item 'c:\pub\hbapi_bak1' -Recurse -ErrorAction Ignore
+        Remove-Item 'c:\pub\hbapi_bak' -Recurse -ErrorAction Ignore
+        ren c:\pub\hbapi hbapi_bak
+        md c:\pub\hbapi
+
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: hbreact
+        path: c:\pub\hbreact
+
+    - name: Start Website
+      run: |
+        # Start the IIS website
+        C:\Windows\System32\inetsrv\appcmd start site /site.name:"API Service"
+ 
