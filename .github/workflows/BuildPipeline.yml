@@ -4,9 +4,10 @@
 name: Build Pipeline
 
 on:
-  push:
-    branches:
-    - master
+  workflow_dispatch:
+  #push:
+    #branches:
+    #- master
 
 jobs:
   build:

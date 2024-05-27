@@ -1,0 +1,55 @@
+name: Build-Release-Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Download Code from Repository
+      uses: actions/checkout@v4.1.5
+    
+    - name: Restore Nuget Packages
+      run: dotnet restore
+      
+    - name: Publish
+      run: dotnet publish --framework net6.0 --output pub --configuration Release --self-contained -r win10-x64
+      
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+       name: hbapi
+       path: pub
+
+  deploy_local:
+    needs: build
+    runs-on: hpzbookg9
+
+    steps: 
+    - name: Stop Website
+      run: |
+        # Stop the IIS website
+        C:\Windows\System32\inetsrv\appcmd stop site /site.name:"HouseBids Website"
+
+    - name: Prepare local folders
+      run: |       
+        Remove-Item 'c:\pub\hbapi_bak1' -Recurse -ErrorAction Ignore
+        Remove-Item 'c:\pub\hbapi_bak' -Recurse -ErrorAction Ignore
+        ren c:\pub\hbapi hbapi_bak
+        md c:\pub\hbapi
+
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: hbapi
+        path: c:\pub\hbapi
+
+    - name: Start Website
+      run: |
+        # Start the IIS website
+        C:\Windows\System32\inetsrv\appcmd start site /site.name:"HouseBids Website"
+
+     
