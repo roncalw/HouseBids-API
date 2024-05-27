@@ -74,8 +74,8 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v4
       with:
-        name: hbreact
-        path: c:\pub\hbreact
+        name: hbapi
+        path: c:\pub\hbapi
 
     - name: Start Website
       run: |
